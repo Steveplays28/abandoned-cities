@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "id": "abandonedcities",
+  "version": "${version}",
+  "name": "abandoned-cities",
+  "description": "Abandoned city generation!",
+  "authors": [
+    "Steveplays28"
+  ],
+  "contact": {
+    "repo": "https://github.com/Steveplays28/abandoned-cities"
+  },
+  "license": "LGPL-3.0",
+  "icon": "assets/abandonedcities/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "client": [
+      "io.github.steveplays28.abandonedcities.client.AbandonedCitiesClient"
+    ],
+    "main": [
+      "io.github.steveplays28.abandonedcities.AbandonedCities"
+    ]
+  },
+  "mixins": [
+    "abandonedcities.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "fabric": "*",
+    "minecraft": "${minecraft_version}"
+  }
+}

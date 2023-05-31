@@ -1,0 +1,14 @@
+{
+  "structures": [
+    {
+      "structure": "abandonedcities:building",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "salt": 1645231474,
+    "spacing": 5,
+    "separation": 3,
+    "type": "minecraft:random_spread"
+  }
+}
