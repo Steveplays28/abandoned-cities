@@ -1,5 +1,5 @@
 {
-  "type": "abandonedcities:building_structure",
+  "type": "minecraft:jigsaw",
   "start_pool": "abandonedcities:building/start_pool",
   "size": 4,
   "max_distance_from_center": 80,

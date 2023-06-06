@@ -2,21 +2,19 @@ package io.github.steveplays28.abandonedcities;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.entity.EntityType;
+import io.github.steveplays28.abandonedcities.structure.BuildingGenerator;
 import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.structure.StructurePiecesList;
+import net.minecraft.structure.StructurePieceType;
+import net.minecraft.structure.StructurePiecesCollector;
 import net.minecraft.structure.pool.StructurePool;
-import net.minecraft.structure.pool.StructurePoolBasedGenerator;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockBox;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
-import net.minecraft.util.math.random.Random;
+import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.HeightLimitView;
 import net.minecraft.world.Heightmap;
-import net.minecraft.world.StructureWorldAccess;
 import net.minecraft.world.gen.HeightContext;
-import net.minecraft.world.gen.StructureAccessor;
 import net.minecraft.world.gen.chunk.ChunkGenerator;
 import net.minecraft.world.gen.heightprovider.HeightProvider;
 import net.minecraft.world.gen.noise.NoiseConfig;
@@ -71,9 +69,11 @@ public class BuildingStructure extends Structure {
 					new HeightContext(context.chunkGenerator(), context.world())
 			);
 			BlockPos blockPos = new BlockPos(chunkPos.getStartX(), y, chunkPos.getStartZ());
-			return StructurePoolBasedGenerator.generate(context, this.startPool, this.startJigsawName, this.size,
-					blockPos, this.useExpansionHack, this.projectStartToHeightmap, this.maxDistanceFromCenter
-			);
+			return getStructurePosition(
+					context, Heightmap.Type.WORLD_SURFACE_WG, (collector) -> addPieces(collector, context));
+//			return StructurePoolBasedGenerator.generate(context, this.startPool, this.startJigsawName, this.size,
+//					blockPos, this.useExpansionHack, this.projectStartToHeightmap, this.maxDistanceFromCenter
+//			);
 		} else {
 			return Optional.empty();
 		}
@@ -105,17 +105,25 @@ public class BuildingStructure extends Structure {
 		return AbandonedCities.BUILDING_STRUCTURE;
 	}
 
-	@Override
-	public void postPlace(StructureWorldAccess world, StructureAccessor structureAccessor, ChunkGenerator chunkGenerator, Random random, BlockBox box, ChunkPos chunkPos, StructurePiecesList pieces) {
-		for (int i = 0; i < 100; i++) {
-			var zombie = EntityType.ZOMBIE.create(world.toServerWorld());
-			if (zombie == null) return;
-			zombie.setPosition(box.getCenter().down(16).toCenterPos());
-			world.spawnEntity(zombie);
+//	@Override
+//	public void postPlace(StructureWorldAccess world, StructureAccessor structureAccessor, ChunkGenerator chunkGenerator, Random random, BlockBox box, ChunkPos chunkPos, StructurePiecesList pieces) {
+//		for (int i = 0; i < 100; i++) {
+//			int y = this.startHeight.get(random, new HeightContext(chunkGenerator, world));
+//			BlockPos blockPos = new BlockPos(chunkPos.getStartX(), y, chunkPos.getStartZ());
+//
+//			var zombie = EntityType.ZOMBIE.create(world.toServerWorld());
+//			if (zombie == null) return;
+//			zombie.setPosition(this.blockPos.toCenterPos());
+//			world.spawnEntity(zombie);
+//
+//			AbandonedCities.LOGGER.info("(building_structure) spawned zombie at {}", this.blockPos.toCenterPos());
+//		}
+//
+//		super.postPlace(world, structureAccessor, chunkGenerator, random, box, chunkPos, pieces);
+//	}
 
-			AbandonedCities.LOGGER.info("(building_structure) spawned zombie at {}", box.getCenter().toCenterPos());
-		}
-
-		super.postPlace(world, structureAccessor, chunkGenerator, random, box, chunkPos, pieces);
+	private static void addPieces(StructurePiecesCollector collector, Structure.Context context) {
+		collector.addPiece(
+				new BuildingGenerator(StructurePieceType.JIGSAW, 1, BlockBox.create(Vec3i.ZERO, new Vec3i(1, 1, 1))));
 	}
 }
